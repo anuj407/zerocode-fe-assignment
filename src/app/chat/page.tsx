@@ -116,7 +116,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="flex flex-col w-2xl ml-[30%] pt-[5.2rem] h-screen border border-gray-500">
+   <div className="flex flex-col w-full sm:w-[740px] sm:ml-[30%] pt-[5.2rem] h-screen border border-gray-500">
       <div className="flex-1 scrollbar-hide overflow-y-auto ">
         <ChatWindow messages={messages} loading={loading} />
       </div>
