@@ -17,7 +17,6 @@ declare global {
     webkitSpeechRecognition: new () => SpeechRecognition;
   }
 
-
   interface SpeechRecognition extends EventTarget {
     lang: string;
     interimResults: boolean;
@@ -29,28 +28,14 @@ declare global {
     onend: () => void;
   }
 
-  interface SpeechRecognitionResult {
-    isFinal: boolean;
-    length: number;
-    item(index: number): SpeechRecognitionAlternative;
-    [index: number]: SpeechRecognitionAlternative;
-  }
-
-  interface SpeechRecognitionAlternative {
-    transcript: string;
-    confidence: number;
-  }
-
   interface SpeechRecognitionResultEvent extends Event {
     results: SpeechRecognitionResultList;
   }
-
-  interface SpeechRecognitionResultList {
-    length: number;
-    item(index: number): SpeechRecognitionResult;
-    [index: number]: SpeechRecognitionResult;
-  }
 }
+
+
+
+
 
 export default function ChatInput({
   input,
