@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"; // ✅ Correct import
 import { useState } from "react";
-
+import Cookies from "js-cookie"; 
 type AuthFormProps = {
   type: "login" | "register";
   validateForm?: (email: string, password: string) => boolean;
@@ -34,6 +34,7 @@ export default function AuthForm({
 
     if (res.ok) {
       const data = await res.json();
+      Cookies.set("token", data.token);
       localStorage.setItem("token", data.token); // Save token
       localStorage.setItem("userId", data.user._id); // Save user ID
       localStorage.setItem("email", email); // Save email for future use
