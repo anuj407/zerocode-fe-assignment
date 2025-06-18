@@ -35,6 +35,8 @@ export default function AuthForm({
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem("token", data.token); // Save token
+      localStorage.setItem("userId", data.user._id); // Save user ID
+      localStorage.setItem("email", email); // Save email for future use
       router.push("/");
       router.refresh();
     } else {
