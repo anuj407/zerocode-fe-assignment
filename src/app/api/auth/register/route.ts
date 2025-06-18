@@ -3,6 +3,9 @@ import { connectDB } from "@/lib/mongoose";
 import { User } from "@/api/models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const SECRET = process.env.JWT_SECRET || "mysecretkey123";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
@@ -18,12 +21,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Hash the password securely
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = await User.create({ email, password: hashedPassword });
 
-    return NextResponse.json({ message: "User created", user: newUser });
+    // ✅ Generate JWT token
+    const token = jwt.sign({ id: newUser._id, email: newUser.email }, SECRET, {
+      expiresIn: "1h",
+    });
+
+    return NextResponse.json({
+      message: "User created",
+      token,
+      user: newUser,
+    });
   } catch (err) {
     return NextResponse.json(
       { message: "Error creating user", error: err },
