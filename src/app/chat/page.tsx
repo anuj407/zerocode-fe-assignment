@@ -120,7 +120,7 @@ useEffect(() => {
       <div className="flex-1 scrollbar-hide overflow-y-auto ">
         <ChatWindow messages={messages} loading={loading} />
       </div>
-      <div className="sticky sm:w-[720px] sm:ml-[30%] px-[0.2rem] flex items-center justify-center bottom-0 bg-white dark:bg-gray-800">
+      <div className="sticky max-sm:px-[1rem] max-sm:flex items-center justify-center bottom-0 bg-white dark:bg-gray-800">
         <ChatInput
           input={input}
           setInput={setInput}
