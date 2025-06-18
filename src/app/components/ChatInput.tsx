@@ -121,7 +121,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="p-4 border-t bg-white dark:bg-gray-800">
+    <div className="p-4  bg-white dark:bg-gray-800">
       <div className="flex items-center gap-2">
         <input
           type="text"
