@@ -87,7 +87,7 @@ export default function HomeLayout() {
       </div>
 
       {/* Theme Toggle */}
-      <div className="fixed bottom-4 right-4 z-[9999]">
+      <div className="fixed bottom-4 right-4 max-md:bottom-10 z-[9999]">
         <button
           onClick={toggleDarkMode}
           className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
