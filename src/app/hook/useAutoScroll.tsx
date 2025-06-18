@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // hooks/useAutoScroll.ts
 import { useEffect, RefObject } from "react";
 

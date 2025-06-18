@@ -16,6 +16,6 @@ export async function GET(req: NextRequest) {
     const data = jwt.verify(token, SECRET) as { email: string };
     return NextResponse.json({ user: { email: data.email } });
   } catch (err) {
-    return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
+    return NextResponse.json({ err}, { status: 401 });
   }
 }

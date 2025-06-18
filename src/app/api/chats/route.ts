@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const newChat = await Chat.create({ userId });
     return NextResponse.json(newChat);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to create chat" }, { status: 500 });
+    return NextResponse.json({ error}, { status: 500 });
   }
 }
 
@@ -31,6 +31,6 @@ export async function GET(req: NextRequest) {
     const chats = await Chat.find({ userId }).sort({ createdAt: -1 });
     return NextResponse.json(chats);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch chats" }, { status: 500 });
+    return NextResponse.json({ error }, { status: 500 });
   }
 }
