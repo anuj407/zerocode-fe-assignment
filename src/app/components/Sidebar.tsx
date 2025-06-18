@@ -12,75 +12,74 @@ export default function Sidebar({ darkMode }: { darkMode: boolean }) {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatIndex, setSelectedChatIndex] = useState<string | null>(null);
 
-  useEffect(() => {
-  const fetchChats = async () => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId"); // assuming you're storing userId locally
-    if (!token || !userId) return;
+  const handleNewChat = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
 
     try {
-      const res = await fetch(`/api/chats?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await fetch("/api/chats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch chats");
-      }
+      if (!res.ok) throw new Error("Failed to create chat");
 
-      const data = await res.json();
-      setChats(data);
-      console.log(data);
-      
+      const newChat = await res.json();
+      localStorage.setItem("chatId", newChat._id);
+      setChats([newChat]); // Update state with new chat
+      setSelectedChatIndex(newChat._id); // Set it as selected
+
     } catch (err) {
-      console.error("Error fetching chats:", err);
+      console.error("New chat error:", err);
     }
   };
 
-  fetchChats();
-}, []);
+  useEffect(() => {
+    const fetchChats = async () => {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      if (!token || !userId) return;
 
- useEffect(() => {
-    const chatId = localStorage.getItem("chatId");
-   
-      if (chatId) {
-        setSelectedChatIndex(chatId);
-      } else {
-        setSelectedChatIndex(null); // Reset if chat not found
+      try {
+        const res = await fetch(`/api/chats?userId=${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch chats");
+        }
+
+        const data = await res.json();
+
+        if (data.length === 0) {
+          await handleNewChat(); // Create a chat if none found
+        } else {
+          setChats(data);
+        }
+      } catch (err) {
+        console.error("Error fetching chats:", err);
       }
-    
- }, [])
+    };
+
+    fetchChats();
+  }, []);
+
+  useEffect(() => {
+    const chatId = localStorage.getItem("chatId");
+    if (chatId) {
+      setSelectedChatIndex(chatId);
+    } else {
+      setSelectedChatIndex(null);
+    }
+  }, []);
 
   const handleChatClick = (chatId: string) => {
-  localStorage.setItem("chatId", chatId); // Save selected chatId
-  window.location.reload(); // Reload the page to trigger fetching messages
-};
-
-
-  const handleNewChat = async () => {
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-
-  try {
-    const res = await fetch("/api/chats", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (!res.ok) throw new Error("Failed to create chat");
-
-    const newChat = await res.json();
-    localStorage.setItem("chatId", newChat._id); // save to localStorage
-
-    window.location.reload(); // Reload the page to trigger fetching messages
-  
-  } catch (err) {
-    console.error("New chat error:", err);
-  }
-};
-
+    localStorage.setItem("chatId", chatId);
+    window.location.reload();
+  };
 
   return (
     <aside
@@ -108,7 +107,7 @@ export default function Sidebar({ darkMode }: { darkMode: boolean }) {
         ) : (
           <ul className="space-y-2">
             {chats.map((chat, index) => {
-              const firstUserMsg =  "Chat -" + (index+1);
+              const chatLabel = "Chat - " + (index + 1);
               return (
                 <li
                   key={chat._id}
@@ -124,7 +123,7 @@ export default function Sidebar({ darkMode }: { darkMode: boolean }) {
                   }`}
                 >
                   <MessageSquare className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm truncate">{firstUserMsg}</span>
+                  <span className="text-sm truncate">{chatLabel}</span>
                 </li>
               );
             })}
