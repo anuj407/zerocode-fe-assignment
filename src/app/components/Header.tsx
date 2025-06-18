@@ -15,7 +15,10 @@ export default function Header({ darkMode }: HeaderProps) {
   const [showLogout, setShowLogout] = useState(false);
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
-  const closeMobileMenu = () => setMobileMenuOpen(false);
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setShowLogout(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,24 +34,25 @@ export default function Header({ darkMode }: HeaderProps) {
 
   const handleLogout = () => {
     Logout();
+    closeMobileMenu();
   };
 
   const username = userEmail?.split("@")[0];
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 shadow-xl transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 shadow-md transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-xl font-bold">
           <BotIcon className="w-6 h-6" />
           <span>ChatBot</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden sm:flex items-center gap-4 relative">
+        {/* Desktop Menu */}
+        <nav className="hidden sm:flex items-center gap-4">
           {!userEmail ? (
             <>
               <Link
@@ -67,25 +71,21 @@ export default function Header({ darkMode }: HeaderProps) {
           ) : (
             <div className="relative">
               <button
-                className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer  transition ${
-                      darkMode
-                        ? "bg-gray-800 hover:bg-gray-700 text-white"
-                        : "bg-white hover:bg-gray-200 text-gray-900"
-                    }`}
                 onClick={() => setShowLogout((prev) => !prev)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md transition ${
+                  darkMode
+                    ? "bg-gray-800 hover:bg-gray-700"
+                    : "bg-white hover:bg-gray-200"
+                }`}
               >
                 <UserCircle className="w-5 h-5" />
                 <span className="capitalize">{username}</span>
               </button>
               {showLogout && (
-                <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 shadow-md rounded-md w-40">
+                <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 shadow-lg rounded-md w-40 z-10">
                   <button
                     onClick={handleLogout}
-                    className={`flex items-center gap-2 w-full px-4 py-2 cursor-pointer text-sm text-left rounded-md transition ${
-                      darkMode
-                        ? "bg-gray-800 hover:bg-gray-700 text-white"
-                        : "bg-white hover:bg-gray-200 text-gray-900"
-                    }`}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -96,7 +96,7 @@ export default function Header({ darkMode }: HeaderProps) {
           )}
         </nav>
 
-        {/* Mobile menu button */}
+        {/* Mobile Menu Toggle */}
         <button
           className="sm:hidden p-2 rounded-md focus:outline-none"
           onClick={toggleMobileMenu}
@@ -105,10 +105,14 @@ export default function Header({ darkMode }: HeaderProps) {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu Panel */}
       {isMobileMenuOpen && (
-        <div className="sm:hidden px-4 pb-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors">
-          <div className="flex flex-col gap-2 pt-2">
+        <div
+          className={`sm:hidden px-4 pb-4 pt-2 backdrop-blur-md transition-all duration-300 ${
+            darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+          }`}
+        >
+          <div className="flex flex-col gap-2">
             {!userEmail ? (
               <>
                 <Link
