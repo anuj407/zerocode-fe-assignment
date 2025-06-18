@@ -2,9 +2,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import ChatWindow from "@/app/components/ChatWindow";
 import ChatInput from "@/app/components/ChatInput";
+
 
 export type Message = {
   id: number;
@@ -24,7 +24,7 @@ export default function ChatPage() {
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
 
-  const router = useRouter();
+
 const [chatId, setChatId] = useState<string | null>(null);
 useEffect(() => {
   const storedId = localStorage.getItem("chatId");
@@ -54,18 +54,7 @@ useEffect(() => {
 },[chatId])
 
   // Fetch messages on mount
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const chatId = localStorage.getItem("chatId");
-
-    if (!token || !chatId) {
-      setTimeout(() => {
-        router.push("/login");
-      }, 0);
-      return;
-    }
-
-  }, [router]);
+  
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -127,8 +116,8 @@ useEffect(() => {
   };
 
   return (
-    <div className="flex flex-col w-2xl ml-[30%] pt-[5.2rem] h-screen">
-      <div className="flex-1 scrollbar-hide overflow-y-auto border border-gray-400">
+    <div className="flex flex-col w-2xl ml-[30%] pt-[5.2rem] h-screen border border-gray-500">
+      <div className="flex-1 scrollbar-hide overflow-y-auto ">
         <ChatWindow messages={messages} loading={loading} />
       </div>
       <div className="sticky bottom-0 bg-white dark:bg-gray-800">
