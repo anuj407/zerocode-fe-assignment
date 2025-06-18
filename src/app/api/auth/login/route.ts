@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       expiresIn: "1h",
     });
 
-    return NextResponse.json({ token });
+    return NextResponse.json({ token , user });
   } catch (err) {
     console.error("Login error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
